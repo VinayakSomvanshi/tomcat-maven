@@ -22,7 +22,7 @@ pipeline {
 
         stage('deployment') {
             steps {
-                deploy adapters: [tomcat9(url: 'http://192.168.1.72:8888/manager/', 
+                deploy adapters: [tomcat9(url: 'http://192.168.1.72:8888/manager/html', 
                     credentialsId: 'tomcatCreds')], 
                     war: 'target/*.war', 
                     contextPath: 'vinayak'
