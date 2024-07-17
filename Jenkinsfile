@@ -23,9 +23,9 @@ pipeline {
         stage('Deploy on Tomcat via SSH') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'tomcatCreds',
-                                      usernameVariable: 'vinayak',
-                                      passwordVariable: 'shamballa')]) {
-                    sh "scp -o 'StrictHostKeyChecking no' target/*.war vinayak@192.168.1.72:/usr/local/tomcat/webapps/"
+                                      usernameVariable: 'aastha',
+                                      passwordVariable: '123456')]) {
+                    sh "scp -o 'StrictHostKeyChecking no' target/*.war vinayak@192.168.1.49:/usr/local/tomcat/webapps/"
                 }
             }
         }
