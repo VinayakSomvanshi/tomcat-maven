@@ -25,7 +25,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'tomcatCreds',
                                       usernameVariable: 'aastha',
                                       passwordVariable: '123456')]) {
-                    sh "scp -vvv -o 'StrictHostKeyChecking no' target/*.war aastha@192.168.1.49:/usr/local/tomcat/webapps/"
+                    sh "scp -o 'StrictHostKeyChecking no' target/*.war aastha@192.168.1.49:/usr/local/tomcat/webapps/"
                 }
             }
         }
