@@ -48,16 +48,5 @@ pipeline {
             }
         }
     }
-
-    post {
-        success {
-            echo "Build successful!"
-            notify('Success')
-        }
-        failure {
-            echo "Build failed!"
-            notify("Error ${err}")
-            error("Build failed!")
-        }
     }
 }
