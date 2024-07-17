@@ -2,50 +2,32 @@ pipeline {
     agent any
 
     stages {
-        stage('clean') {
+        stage('Checkout Code') {
             steps {
-                // Run the maven build
-                sh "mvn -Dmaven.test.failure.ignore clean"
+                checkout scm
             }
         }
-   
-        stage('compile') {
+
+        stage('Build') {
             steps {
-                // Run the maven build
-                sh "mvn -Dmaven.test.failure.ignore compile"
+                sh "mvn clean install -Dmaven.test.skip=true"
             }
         }
-   
-        stage('testing') {
+
+        stage('Archive Artifact') {
             steps {
-                // Run the maven build
-                sh "mvn -Dmaven.test.failure.ignore test"
+                archiveArtifacts artifacts: 'target/*.war'
             }
         }
-   
-        stage('packing') {
+
+        stage('deployment') {
             steps {
-                // Run the maven build
-                sh "mvn -Dmaven.test.failure.ignore package"
+                deploy adapters: [tomcat9(url: 'http://192.168.1.72:8888/manager/', 
+                    credentialsId: 'tomcatCreds')], 
+                    war: 'target/*.war', 
+                    contextPath: 'vinayak'
             }
         }
-   
-        stage('Stop Tomcat') {
-            steps {
-                sh "ssh -o StrictHostKeyChecking=no -T 'vinayak@192.168.1.72' /usr/local/tomcat/bin/./shutdown.sh"
-            }
-        }
-        
-        stage('War File Deployment') {
-            steps {
-                sh "scp -o StrictHostKeyChecking=no target/*.war 'vinayak@192.168.1.72':/usr/local/tomcat/webapps/"
-            }
-        }
-        
-        stage('Start Tomcat') {
-            steps {
-                sh "ssh -o StrictHostKeyChecking=no -T 'vinayak@192.168.1.72' /usr/local/tomcat/bin/./startup.sh"
-            }
-        }
+
     }
 }
