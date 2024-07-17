@@ -32,19 +32,19 @@ pipeline {
    
         stage('Stop Tomcat') {
             steps {
-                sh "ssh -T 'vinayak@192.168.1.72' /usr/local/bin/./shutdown.sh"
+                sh "ssh -o StrictHostKeyChecking=no -T 'vinayak@192.168.1.72' /usr/local/bin/./shutdown.sh"
             }
         }
         
         stage('War File Deployment') {
             steps {
-                sh "scp target/*.war 'vinayak@192.168.1.72':/usr/local/webapps/"
+                sh "scp -o StrictHostKeyChecking=no target/*.war 'vinayak@192.168.1.72':/usr/local/webapps/"
             }
         }
         
         stage('Start Tomcat') {
             steps {
-                sh "ssh -T 'vinayak@192.168.1.72' /usr/local/bin/./startup.sh"
+                sh "ssh -o StrictHostKeyChecking=no -T 'vinayak@192.168.1.72' /usr/local/bin/./startup.sh"
             }
         }
     }
