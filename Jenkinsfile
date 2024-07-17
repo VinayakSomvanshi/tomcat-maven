@@ -64,7 +64,7 @@ pipeline {
         failure {
             echo "Build failed!"
             notify("Error ${err}")
-            currentBuild.result = 'FAILURE'
+            error("Build failed!")
         }
     }
 }
