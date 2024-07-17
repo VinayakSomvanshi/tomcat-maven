@@ -30,13 +30,6 @@ pipeline {
             }
         }
    
-        stage('Test-Result') {
-            steps {
-                // Run the maven build
-                junit 'target/surefire-reports/*.xml'
-            }
-        }
-   
         stage('Stop Tomcat') {
             steps {
                 sh "ssh -T 'vinayak@192.168.1.72' /usr/local/bin/./shutdown.sh"
