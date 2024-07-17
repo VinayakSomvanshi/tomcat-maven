@@ -2,32 +2,69 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Code') {
+        stage('clean') {
             steps {
-                checkout scm
+                // Run the maven build
+                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean"
             }
         }
-
-        stage('Build') {
+   
+        stage('compile') {
             steps {
-                sh "mvn clean install -Dmaven.test.skip=true"
+                // Run the maven build
+                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore compile"
             }
         }
-
-        stage('Archive Artifact') {
+   
+        stage('testing') {
             steps {
-                archiveArtifacts artifacts: 'target/*.war'
+                // Run the maven build
+                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore test"
             }
         }
-
-        stage('Deploy on Tomcat via SSH') {
+   
+        stage('packing') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'tomcatCreds',
-                                      usernameVariable: 'aastha',
-                                      passwordVariable: '123456')]) {
-                    sh "scp -o 'StrictHostKeyChecking no' target/*.war aastha@192.168.1.49:/usr/local/tomcat/webapps/"
-                }
+                // Run the maven build
+                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore package"
             }
+        }
+   
+        stage('Test-Result') {
+            steps {
+                // Run the maven build
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+   
+        stage('Stop Tomcat') {
+            steps {
+                sh "ssh -T 'vinayak@192.168.1.72' /usr/local/bin/./shutdown.sh"
+            }
+        }
+        
+        stage('War File Deployment') {
+            steps {
+                sh "scp target/*.war 'vinayak@192.168.1.72':/usr/local/webapps/"
+            }
+        }
+        
+        stage('Start Tomcat') {
+            steps {
+                sh "ssh -T 'vinayak@192.168.1.72' /usr/local/bin/./startup.sh"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Build successful!"
+            notify('Success')
+        }
+        failure {
+            echo "Build failed!"
+            notify("Error ${err}")
+            currentBuild.result = 'FAILURE'
         }
     }
 }
