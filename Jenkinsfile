@@ -5,28 +5,28 @@ pipeline {
         stage('clean') {
             steps {
                 // Run the maven build
-                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean"
+                sh "mvn -Dmaven.test.failure.ignore clean"
             }
         }
    
         stage('compile') {
             steps {
                 // Run the maven build
-                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore compile"
+                sh "mvn -Dmaven.test.failure.ignore compile"
             }
         }
    
         stage('testing') {
             steps {
                 // Run the maven build
-                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore test"
+                sh "mvn -Dmaven.test.failure.ignore test"
             }
         }
    
         stage('packing') {
             steps {
                 // Run the maven build
-                sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore package"
+                sh "mvn -Dmaven.test.failure.ignore package"
             }
         }
    
