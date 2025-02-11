@@ -37,7 +37,7 @@ pipeline {
 
         stage('Email Pipeline') {
             steps {
-                mail bcc: '', body: 'Hello, This is an email from Jenkins pipeline. Your build has been completed.', cc: '', from: '', replyTo: '', subject: 'Build Status', to: 'aastha.patil@datasciencewizards.ai'
+                mail bcc: '', body: 'Hello, This is an email from Jenkins pipeline. Your build has been completed.', cc: '', from: '', replyTo: '', subject: 'Build Status', to: 'vinzyzk@gmail.com'
             }
         }
 
